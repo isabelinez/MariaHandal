@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MARIA — Fuerza + Energía</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+:root{--black:#0A0A0A;--dark:#111111;--card:#161616;--card2:#1a1a1a;--orange:#FF6B00;--orange-dim:rgba(255,107,0,0.12);--orange-border:rgba(255,107,0,0.3);--white:#FFFFFF;--grey:#888888;--grey2:#444444;--grey3:#2a2a2a;--light:#EFEFEF;--green:#22c55e;--blue:#4da3ff;--yellow:#facc15;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:var(--dark);}::-webkit-scrollbar-thumb{background:var(--grey2);border-radius:2px;}
+.header{background:var(--dark);border-bottom:2px solid var(--orange);padding:0 1.5rem;position:sticky;top:0;z-index:200;}
+.header-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--orange);line-height:1;}
+.logo span{color:var(--white);}
+.logo-sub{display:block;font-family:'Inter',sans-serif;font-size:0.52rem;letter-spacing:3px;color:var(--grey);font-weight:700;text-transform:uppercase;margin-top:2px;}
+.header-right{display:flex;align-items:center;gap:0.75rem;}
+.sync-badge{display:flex;align-items:center;gap:6px;font-size:0.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--grey);background:#1a1a1a;border:1px solid #2a2a2a;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--grey2);flex-shrink:0;}
+.sync-dot.syncing{background:var(--orange);animation:syncpulse 1s infinite;}
+.sync-dot.synced{background:var(--green);}
+.sync-dot.offline{background:#ef4444;}
+@keyframes syncpulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.badge{background:var(--orange);color:var(--black);font-size:0.6rem;font-weight:800;letter-spacing:2px;padding:4px 10px;border-radius:2px;text-transform:uppercase;}
+.phase-badge{background:transparent;color:var(--orange);border:1px solid var(--orange-border);font-size:0.6rem;font-weight:700;letter-spacing:2px;padding:4px 10px;border-radius:2px;text-transform:uppercase;}
+.hero{background:linear-gradient(135deg,#0A0A0A 0%,#140800 45%,#0A0A0A 100%);padding:2.5rem 1.5rem 2rem;border-bottom:1px solid #1c1c1c;position:relative;overflow:hidden;}
+.hero::after{content:'FUERZA';position:absolute;right:-40px;top:-15px;font-family:'Bebas Neue',sans-serif;font-size:9rem;color:rgba(255,107,0,0.035);letter-spacing:8px;pointer-events:none;white-space:nowrap;}
+.hero-inner{max-width:1280px;margin:0 auto;}
+.hero-label{font-size:0.65rem;font-weight:700;letter-spacing:5px;color:var(--orange);text-transform:uppercase;margin-bottom:0.5rem;}
+.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,6vw,4rem);letter-spacing:4px;line-height:0.95;margin-bottom:0.6rem;}
+.hero-name .accent{color:var(--orange);}
+.hero-desc{font-size:0.8rem;color:var(--grey);font-weight:400;letter-spacing:0.5px;margin-bottom:1.5rem;max-width:600px;line-height:1.6;}
+.hero-stats{display:flex;gap:2rem;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;gap:3px;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--orange);letter-spacing:2px;line-height:1;}
+.stat-label{font-size:0.6rem;color:var(--grey);letter-spacing:2.5px;text-transform:uppercase;font-weight:600;}
+.stat-divider{width:1px;background:var(--grey2);align-self:stretch;}
+.goals-strip{background:linear-gradient(90deg,#140800 0%,#0f0f0f 100%);border-bottom:1px solid var(--grey3);padding:0.75rem 1.5rem;}
+.goals-strip-inner{max-width:1280px;margin:0 auto;display:flex;gap:2rem;flex-wrap:wrap;align-items:center;}
+.goal-pill{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;color:var(--light);font-weight:500;}
+.goal-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);flex-shrink:0;}
+#connTestStrip{background:#111;border-bottom:1px solid #222;padding:0.5rem 1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+.tabs-wrapper{background:var(--dark);border-bottom:1px solid #1c1c1c;overflow-x:auto;scrollbar-width:none;position:sticky;top:60px;z-index:100;}
+.tabs-wrapper::-webkit-scrollbar{display:none;}
+.tabs{max-width:1280px;margin:0 auto;display:flex;padding:0 1.5rem;}
+.tab{padding:0.9rem 1rem;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);cursor:pointer;border:none;background:none;border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.2s;font-family:'Inter',sans-serif;line-height:1.5;}
+.tab:hover{color:var(--white);}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);}
+.tab-sub{display:block;font-size:0.52rem;color:inherit;letter-spacing:1px;margin-top:1px;}
+.content{max-width:1280px;margin:0 auto;padding:2rem 1.5rem;}
+.section{display:none;}
+.section.active{display:block;}
+.section-header{margin-bottom:1.75rem;}
+.section-eyebrow{font-size:0.62rem;font-weight:700;letter-spacing:4px;color:var(--orange);text-transform:uppercase;margin-bottom:0.4rem;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);letter-spacing:4px;line-height:1;}
+.home-group-label{font-size:0.6rem;font-weight:800;letter-spacing:3px;color:var(--orange);text-transform:uppercase;margin:1.5rem 0 0.75rem;}
+.home-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.85rem;}
+.home-card{background:var(--card);border:1px solid #1e1e1e;border-radius:8px;padding:1.25rem 1.1rem;cursor:pointer;position:relative;transition:border-color 0.2s;}
+.home-card:hover{border-color:var(--orange-border);}
+.home-card-icon{font-size:1.5rem;margin-bottom:0.6rem;display:block;}
+.home-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1.5px;color:var(--white);}
+.home-card-desc{font-size:0.68rem;color:var(--grey);margin-top:0.35rem;}
+.phase-block{background:var(--card);border-radius:6px;overflow:hidden;margin-bottom:1rem;border:1px solid #1e1e1e;transition:border-color 0.2s;}
+.phase-block:hover{border-color:#2a2a2a;}
+.phase-header{background:var(--orange);padding:0.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background 0.15s;}
+.phase-header:hover{background:#e86000;}
+.phase-header.warmup-hdr{background:#1a3a1a;border-left:3px solid var(--green);}
+.phase-header.warmup-hdr:hover{background:#1e421e;}
+.phase-header.cooldown-hdr{background:#0d1a2e;border-left:3px solid #60a5fa;}
+.phase-header.cooldown-hdr:hover{background:#0f2035;}
+.phase-header.dark-hdr{background:#222;}
+.phase-header-left{display:flex;align-items:center;gap:0.75rem;}
+.phase-label{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--black);line-height:1;min-width:20px;}
+.phase-label.green{color:var(--green);}
+.phase-label.blue{color:#60a5fa;}
+.phase-label.orange{color:var(--orange);}
+.phase-title{font-weight:800;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--black);}
+.phase-title.green{color:#86efac;}
+.phase-title.blue{color:#93c5fd;}
+.phase-title.light{color:var(--white);}
+.phase-sub{font-size:0.65rem;color:rgba(0,0,0,0.5);font-weight:500;}
+.phase-sub.green{color:rgba(134,239,172,0.6);}
+.phase-sub.blue{color:rgba(147,197,253,0.6);}
+.phase-sub.light{color:var(--grey);}
+.phase-toggle{font-size:1.1rem;color:var(--black);font-weight:700;transition:transform 0.3s ease;line-height:1;width:22px;text-align:center;}
+.phase-toggle.green{color:var(--green);}
+.phase-toggle.blue{color:#60a5fa;}
+.phase-toggle.light{color:var(--white);}
+.phase-toggle.open{transform:rotate(45deg);}
+.phase-body{display:block;}
+.phase-body.collapsed{display:none;}
+.pill-section{padding:1rem 1.25rem 0.85rem;}
+.pill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.5rem;}
+.pill-item{background:#1c1c1c;border-radius:5px;padding:0.65rem 0.9rem;display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;border:1px solid #252525;}
+.pill-item.warm{border-left:2px solid var(--green);}
+.pill-item.cool{border-left:2px solid #60a5fa;}
+.pill-text{font-size:0.75rem;color:var(--light);font-weight:500;line-height:1.4;flex:1;}
+.pill-sets{font-size:0.65rem;color:var(--grey);margin-top:2px;}
+.ex-section{padding:0.5rem 1.25rem 0.75rem;}
+.exercise{padding:0.75rem 0;border-bottom:1px solid #1a1a1a;}
+.exercise:last-child{border-bottom:none;}
+.ex-top{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;}
+.ex-num{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--orange);min-width:26px;line-height:1;}
+.ex-info{flex:1;min-width:0;}
+.ex-name{font-size:0.85rem;font-weight:700;color:var(--white);line-height:1.3;}
+.ex-sets-line{display:flex;align-items:center;gap:0.5rem;margin-top:3px;flex-wrap:wrap;}
+.ex-sets{font-size:0.68rem;color:var(--grey);}
+.ex-note{font-size:0.65rem;color:var(--orange);font-style:italic;margin-top:2px;}
+.ex-actions{display:flex;align-items:center;gap:0.5rem;flex-shrink:0;}
+.video-btn{display:inline-flex;align-items:center;gap:4px;background:var(--orange-dim);border:1px solid var(--orange-border);color:var(--orange);font-size:0.6rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 9px;border-radius:4px;text-decoration:none;white-space:nowrap;transition:all 0.18s;flex-shrink:0;}
+.video-btn:hover{background:var(--orange);color:var(--black);}
+.video-btn svg{width:9px;height:9px;flex-shrink:0;}
+.weight-log{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;padding:0.5rem 0.75rem;background:#111;border-radius:5px;border:1px solid #222;}
+.set-inputs{display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;flex:1;}
+.set-entry{display:flex;align-items:center;gap:3px;}
+.set-label{font-size:0.6rem;color:var(--grey2);font-weight:600;min-width:18px;}
+.weight-input{background:#1a1a1a;border:1px solid #333;border-radius:4px;color:var(--white);font-size:0.75rem;font-weight:600;font-family:'Inter',sans-serif;padding:4px 6px;width:58px;text-align:center;transition:border-color 0.15s;-moz-appearance:textfield;}
+.weight-input::-webkit-outer-spin-button,.weight-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.weight-input:focus{outline:none;border-color:var(--orange);background:#1e1000;}
+.weight-input::placeholder{color:var(--grey2);font-size:0.65rem;}
+.log-note-field{width:100%;background:#111;border:1px solid #222;border-radius:4px;color:var(--grey);font-size:0.72rem;font-family:'Inter',sans-serif;padding:5px 8px;resize:none;margin-top:0.35rem;min-height:36px;transition:border-color 0.15s;}
+.log-note-field:focus{outline:none;border-color:var(--grey2);color:var(--light);}
+.log-note-field::placeholder{color:var(--grey2);}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.info-card{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;padding:1.25rem;transition:border-color 0.2s;}
+.info-card:hover{border-color:#2a2a2a;}
+.info-card-label{font-size:0.6rem;font-weight:800;letter-spacing:3px;color:var(--orange);text-transform:uppercase;margin-bottom:0.85rem;line-height:1.4;}
+.info-card-list{list-style:none;}
+.info-card-list li{font-size:0.78rem;color:var(--light);padding:0.35rem 0;border-bottom:1px solid #1c1c1c;display:flex;align-items:flex-start;gap:0.5rem;line-height:1.5;}
+.info-card-list li:last-child{border-bottom:none;}
+.info-card-list li::before{content:'▸';color:var(--orange);font-size:0.65rem;margin-top:2px;flex-shrink:0;}
+.alert-banner{background:linear-gradient(135deg,#140800 0%,#0f0f0f 100%);border:1px solid #2a2a2a;border-left:4px solid var(--orange);border-radius:6px;padding:1.1rem 1.25rem;margin-bottom:1.25rem;}
+.alert-banner-label{font-size:0.6rem;font-weight:800;letter-spacing:3px;color:var(--orange);text-transform:uppercase;margin-bottom:0.6rem;}
+.alert-banner-list{list-style:none;}
+.alert-banner-list li{font-size:0.78rem;color:var(--light);line-height:1.6;padding:0.2rem 0;display:flex;gap:0.5rem;}
+.alert-banner-list li::before{content:'→';color:var(--orange);flex-shrink:0;}
+.rule-card{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;padding:1.25rem;margin-bottom:0.75rem;display:flex;gap:1rem;align-items:flex-start;}
+.rule-num{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--orange);line-height:1;min-width:44px;opacity:0.5;}
+.rule-title{font-weight:800;font-size:0.85rem;color:var(--white);margin-bottom:0.35rem;letter-spacing:0.3px;}
+.rule-body{font-size:0.75rem;color:var(--grey);line-height:1.65;}
+.timeline-block{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;overflow:hidden;margin-bottom:1.25rem;}
+.timeline-header{background:var(--orange);padding:0.65rem 1.25rem;display:flex;align-items:center;gap:0.75rem;}
+.timeline-header-title{font-weight:800;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--black);}
+.timeline-header-period{font-size:0.65rem;color:rgba(0,0,0,0.5);font-weight:600;}
+.timeline-body{padding:1rem 1.25rem;}
+.timeline-list{list-style:none;}
+.timeline-list li{font-size:0.78rem;color:var(--light);line-height:1.6;padding:0.25rem 0;display:flex;gap:0.5rem;}
+.timeline-list li::before{content:'✓';color:var(--orange);flex-shrink:0;font-weight:800;}
+.notes-area{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;overflow:hidden;margin-bottom:1rem;}
+.notes-area-header{background:#1c1c1c;padding:0.65rem 1.25rem;display:flex;align-items:center;justify-content:space-between;}
+.notes-area-title{font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--white);}
+.notes-area-sub{font-size:0.6rem;color:var(--grey);}
+.notes-body{padding:0.75rem 1.25rem;}
+.note-entry{background:#111;border:1px solid #222;border-left:3px solid var(--orange);border-radius:4px;padding:0.65rem 0.85rem;margin-bottom:0.5rem;font-size:0.74rem;color:var(--light);line-height:1.6;}
+.note-date{font-size:0.6rem;color:var(--orange);font-weight:700;letter-spacing:1px;margin-bottom:3px;}
+.session-note-input{width:100%;background:#111;border:1px solid #222;border-radius:5px;color:var(--light);font-size:0.78rem;font-family:'Inter',sans-serif;padding:0.65rem 0.85rem;resize:vertical;min-height:80px;transition:border-color 0.15s;line-height:1.6;}
+.session-note-input:focus{outline:none;border-color:var(--orange);}
+.session-note-input::placeholder{color:var(--grey2);}
+.save-note-btn{margin-top:0.5rem;background:var(--orange);color:var(--black);font-size:0.65rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:4px;border:none;cursor:pointer;transition:background 0.15s;font-family:'Inter',sans-serif;}
+.save-note-btn:hover{background:#e86000;}
+.log-save-row{display:flex;align-items:center;justify-content:flex-end;gap:0.6rem;margin-top:0.4rem;}
+.save-log-btn{background:var(--orange);color:var(--black);font-size:0.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:4px;border:none;cursor:pointer;transition:background 0.15s;font-family:'Inter',sans-serif;flex-shrink:0;}
+.save-log-btn:hover{background:#e86000;}
+.save-log-btn.saved{background:var(--green);color:var(--black);}
+.saved-tag{font-size:0.62rem;color:var(--grey);font-weight:600;opacity:0;transition:opacity 0.2s;}
+.saved-tag.show{opacity:1;color:var(--green);}
+.weight-log-label-btn{background:none;border:none;font-size:0.6rem;font-weight:700;letter-spacing:2px;color:var(--grey);text-transform:uppercase;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Inter',sans-serif;padding:2px 0;transition:color 0.15s;}
+.weight-log-label-btn:hover{color:var(--orange);}
+.weight-log-label-btn .hist-caret{font-size:0.55rem;transition:transform 0.2s;display:inline-block;}
+.weight-log-label-btn.open .hist-caret{transform:rotate(90deg);}
+.weight-log-label-btn .hist-count{background:var(--orange);color:var(--black);font-size:0.52rem;font-weight:800;padding:1px 5px;border-radius:8px;min-width:14px;text-align:center;display:none;}
+.weight-log-label-btn.has-history .hist-count{display:inline-block;}
+.history-panel{display:none;margin-top:0.4rem;background:#0d0d0d;border:1px solid #222;border-radius:5px;padding:0.6rem 0.75rem;max-height:220px;overflow-y:auto;}
+.history-panel.open{display:block;}
+.history-empty{font-size:0.7rem;color:var(--grey2);font-style:italic;text-align:center;padding:0.5rem 0;}
+.history-row{display:flex;align-items:center;justify-content:space-between;gap:0.5rem;padding:0.4rem 0;border-bottom:1px solid #1c1c1c;}
+.history-row:last-child{border-bottom:none;}
+.history-date{font-size:0.62rem;color:var(--orange);font-weight:700;letter-spacing:0.5px;white-space:nowrap;}
+.history-sets{font-size:0.68rem;color:var(--light);font-weight:500;text-align:right;}
+.history-note{font-size:0.65rem;color:var(--grey);font-style:italic;margin-top:2px;text-align:right;}
+.history-row-content{display:flex;flex-direction:column;align-items:flex-end;gap:1px;flex:1;}
+.divider{border:none;border-top:1px solid #1c1c1c;margin:1.5rem 0;}
+.complete-day-btn{width:100%;padding:0.85rem;border-radius:6px;border:none;background:var(--orange);color:var(--black);font-weight:800;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;margin-top:0.5rem;cursor:pointer;font-family:'Inter',sans-serif;transition:background 0.15s;}
+.complete-day-btn:hover{background:#e86000;}
+.complete-day-btn.done{background:var(--card);color:var(--green);border:1px solid var(--green);}
+.streak-card{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;padding:1.5rem;text-align:center;margin-bottom:1.5rem;}
+.streak-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--orange);line-height:1;}
+.streak-lbl{font-size:0.65rem;color:var(--grey);text-transform:uppercase;letter-spacing:2px;margin-top:4px;}
+.week-grid{display:flex;gap:0.5rem;margin-top:1.25rem;}
+.week-day{flex:1;text-align:center;}
+.week-day .dot{width:34px;height:34px;border-radius:50%;background:#111;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:0.7rem;color:var(--grey2);font-weight:700;}
+.week-day .dot.done{background:var(--orange);border-color:var(--orange);color:var(--black);}
+.week-day .wlbl{font-size:0.55rem;color:var(--grey2);text-transform:uppercase;letter-spacing:1px;}
+.history-item{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;padding:0.85rem 1.1rem;margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:center;}
+.history-item .hd-name{font-weight:700;font-size:0.8rem;color:var(--white);}
+.history-item .hd-date{color:var(--grey);font-size:0.68rem;}
+.empty-msg{font-size:0.78rem;color:var(--grey2);text-align:center;padding:1.5rem 0;font-style:italic;}
+.checkin-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0.6rem;margin-bottom:0.85rem;}
+.checkin-grid-3{grid-template-columns:repeat(3,1fr);}
+.checkin-grid label{font-size:0.58rem;color:var(--grey);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.checkin-grid input,.checkin-grid select{width:100%;background:#1a1a1a;border:1px solid #333;border-radius:4px;color:var(--white);font-size:0.78rem;font-family:'Inter',sans-serif;padding:7px 8px;}
+.checkin-grid input:focus,.checkin-grid select:focus{outline:none;border-color:var(--orange);}
+.checkin-subhead{font-size:0.6rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin:0.9rem 0 0.6rem;}
+.checkin-card{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;padding:1rem 1.1rem;margin-bottom:0.75rem;}
+.checkin-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;}
+.checkin-card-date{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--white);}
+.checkin-stats-row{display:flex;gap:0.75rem;flex-wrap:wrap;margin-bottom:0.6rem;}
+.checkin-stat{background:#111;border:1px solid #222;border-radius:5px;padding:0.5rem 0.75rem;min-width:76px;text-align:center;}
+.checkin-stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;color:var(--orange);line-height:1;}
+.checkin-stat-label{font-size:0.52rem;color:var(--grey);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.checkin-delta{font-size:0.58rem;font-weight:700;margin-top:2px;display:block;}
+.checkin-delta.down{color:var(--green);}
+.checkin-delta.up{color:#ef4444;}
+.checkin-habits{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;}
+.checkin-habit-badge{font-size:0.58rem;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:3px 8px;border-radius:12px;background:rgba(255,107,0,0.1);border:1px solid rgba(255,107,0,0.25);color:var(--orange);}
+.food-log-card{background:var(--card);border:1px solid #1e1e1e;border-radius:6px;overflow:hidden;margin-bottom:1.5rem;}
+.food-log-header{background:#1c1c1c;padding:0.85rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+.food-log-title{font-size:0.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:var(--white);}
+.food-log-sub{font-size:0.62rem;color:var(--grey);margin-top:2px;}
+.food-log-date{background:#111;border:1px solid #2a2a2a;border-radius:4px;color:var(--white);font-size:0.72rem;font-family:'Inter',sans-serif;padding:5px 8px;}
+.food-log-body{padding:1.1rem 1.25rem;}
+@media(max-width:700px){.hero-name{font-size:2rem;}.info-grid{grid-template-columns:1fr;}.hero-stats{gap:1rem;}.tab{padding:0.8rem 0.75rem;font-size:0.58rem;}.content{padding:1.25rem 1rem;}.set-inputs{gap:0.3rem;}.weight-input{width:50px;}.rule-card{flex-direction:column;gap:0.25rem;}.rule-num{font-size:1.8rem;}.stat-divider{display:none;}.goals-strip-inner{gap:0.75rem;}.checkin-grid-3{grid-template-columns:1fr 1fr;}.header-right .phase-badge{display:none;}}
+.macro-totals-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1rem;}
+.macro-total-card{background:#111;border:1px solid #222;border-radius:5px;padding:0.7rem 0.5rem;text-align:center;}
+.macro-total-val{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;line-height:1;color:var(--orange);}
+.macro-total-val.cal{color:var(--white);}
+.macro-total-val.protein{color:var(--blue);}
+.macro-total-val.carbs{color:var(--yellow);}
+.macro-total-val.water{color:#38bdf8;}
+.macro-total-label{font-size:0.55rem;color:var(--grey);letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;}
+.macro-total-goal{font-size:0.55rem;color:var(--grey2);margin-top:1px;}
+.macro-bar-track{height:4px;background:#222;border-radius:2px;margin-top:5px;overflow:hidden;}
+.macro-bar-fill{height:100%;border-radius:2px;transition:width 0.3s ease;}
+.macro-bar-fill.carbs{background:var(--yellow);}
+.macro-input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:1rem;}
+.macro-input-grid label{font-size:0.58rem;color:var(--grey);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+.macro-input-grid input{width:100%;background:#1a1a1a;border:1px solid #333;border-radius:4px;color:var(--white);font-size:0.8rem;font-family:'Inter',sans-serif;padding:8px;text-align:center;}
+.macro-input-grid input:focus{outline:none;border-color:var(--orange);}
+.mfp-btn{display:block;width:100%;text-align:center;background:#2A76F0;color:#fff;border:none;padding:0.85rem;border-radius:6px;font-weight:800;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif;transition:background 0.15s;margin-bottom:0.6rem;}
+.mfp-btn:hover{background:#1e5fc9;}
+.mfp-note{font-size:0.72rem;color:var(--grey);line-height:1.6;margin-bottom:0.9rem;}
+@media(max-width:700px){.macro-totals-row{grid-template-columns:repeat(2,1fr);}.macro-input-grid{grid-template-columns:repeat(2,1fr);}}
+
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">CRUNCH <span>FITNESS</span><span class="logo-sub">Lake Nona · Tu Programa</span></div>
+    <div class="header-right">
+      <div class="sync-badge" id="syncBadge"><span class="sync-dot" id="syncDot"></span><span id="syncText">Cargando…</span></div>
+      <div class="phase-badge">Fuerza + Energía</div>
+      <div class="badge">Programa de Maria</div>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Tu Programa De Entrenamiento Personalizado</div>
+    <div class="hero-name">MARIA — <span class="accent">FUERZA</span> Y ENERGÍA</div>
+    <div class="hero-desc">Maria, este programa es tuyo. Vamos a construir fuerza desde la base, subir tu energía y que te muevas mejor cada semana — sin prisa y sin castigo. Tres días de fuerza de unos 30 minutos, dos días de cardio suave y movilidad, y recuperación pa' que tu cuerpo responda. Aquí la técnica va primero; el peso viene después.</div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-val">3</div><div class="stat-label">Días De Fuerza</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-val">2</div><div class="stat-label">Días Cardio + Movilidad</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-val">~30</div><div class="stat-label">Min Por Sesión</div></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><div class="stat-val">2</div><div class="stat-label">Días De Descanso</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="goals-strip">
+  <div class="goals-strip-inner">
+    <div class="goal-pill"><div class="goal-dot"></div>Fuerza desde la base</div>
+    <div class="goal-pill"><div class="goal-dot"></div>Más energía en tu día a día</div>
+    <div class="goal-pill"><div class="goal-dot"></div>Movilidad y equilibrio</div>
+    <div class="goal-pill"><div class="goal-dot"></div>Corazón fuerte con cardio suave</div>
+  </div>
+</div>
+
+<div id="connTestStrip">
+  <span style="font-size:0.62rem;font-weight:700;letter-spacing:2px;color:#555;text-transform:uppercase;">Sync</span>
+  <span id="connStatus" style="font-size:0.7rem;color:#555;font-weight:600;">Sin probar</span>
+  <button onclick="testConnection()" style="background:none;border:1px solid #333;color:#888;font-size:0.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:4px;cursor:pointer;font-family:Inter,sans-serif;">PROBAR CONEXIÓN</button>
+</div>
+
+<div class="tabs-wrapper">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('home',this)">Inicio</button>
+    <button class="tab" onclick="switchTab('day1',this)">Lunes<span class="tab-sub">FULL BODY A</span></button>
+    <button class="tab" onclick="switchTab('day2',this)">Martes<span class="tab-sub">CARDIO · MOVILIDAD</span></button>
+    <button class="tab" onclick="switchTab('day3',this)">Miércoles<span class="tab-sub">FULL BODY B</span></button>
+    <button class="tab" onclick="switchTab('day4',this)">Jueves<span class="tab-sub">CARDIO · TOBILLOS</span></button>
+    <button class="tab" onclick="switchTab('day5',this)">Viernes<span class="tab-sub">FULL BODY C</span></button>
+    <button class="tab" onclick="switchTab('recovery',this)">Recuperación<span class="tab-sub">SÁBADO · DOMINGO</span></button>
+    <button class="tab" onclick="switchTab('progress',this)">Progreso</button>
+    <button class="tab" onclick="switchTab('nutrition',this)">Nutrición</button>
+    <button class="tab" onclick="switchTab('rules',this)">Reglas</button>
+    <button class="tab" onclick="switchTab('notes',this)">Notas</button>
+  </div>
+</div>
+
+<div class="content">
+<!-- HOME -->
+<div id="home" class="section active">
+  <div class="section-header">
+    <div class="section-eyebrow">Bienvenida, Maria</div>
+    <div class="section-title">TU PROGRAMA</div>
+    <p style="font-size:0.8rem;color:var(--grey);margin-top:0.75rem;line-height:1.6;max-width:600px;">Toca cualquier día o herramienta abajo pa' empezar directo.</p>
+  </div>
+  <div class="alert-banner"><div class="alert-banner-label">⚠ Escucha A Tu Cuerpo</div><ul class="alert-banner-list"><li>Para el ejercicio enseguida si sientes dolor agudo, molestia en el pecho, mareo o falta de aire fuera de lo normal — y me avisas.</li><li>La técnica y el descanso van primero. Si un día no terminas todo en 30 minutos, no pasa nada — lo importante es hacerlo bien.</li></ul></div>
+  <div class="home-group-label">Tu Semana</div>
+  <div class="home-grid">
+    <div class="home-card" onclick="goHome('day1')"><span class="home-card-icon">💪</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Lunes · Fuerza</div><div class="home-card-title">Full Body A</div><div class="home-card-desc">Sentadilla goblet, split squat, remo TRX</div></div>
+    <div class="home-card" onclick="goHome('day2')"><span class="home-card-icon">🚶🏻‍♀️</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Martes · Suave</div><div class="home-card-title">Cardio &amp; Movilidad</div><div class="home-card-desc">Trineo, cadera 90/90, equilibrio, caminata</div></div>
+    <div class="home-card" onclick="goHome('day3')"><span class="home-card-icon">🏋🏻‍♀️</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Miércoles · Fuerza</div><div class="home-card-title">Full Body B</div><div class="home-card-desc">Peso muerto, press de pecho, remo</div></div>
+    <div class="home-card" onclick="goHome('day4')"><span class="home-card-icon">🦶🏻</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Jueves · Suave</div><div class="home-card-title">Cardio &amp; Tobillos</div><div class="home-card-desc">Bici o caminata, tibial, pantorrillas</div></div>
+    <div class="home-card" onclick="goHome('day5')"><span class="home-card-icon">⚡</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Viernes · Fuerza</div><div class="home-card-title">Full Body C</div><div class="home-card-desc">Goblet, step-ups, remo con banda</div></div>
+    <div class="home-card" onclick="goHome('recovery')"><span class="home-card-icon">🧘🏻‍♀️</span><div style="font-size:0.58rem;font-weight:800;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:0.3rem;">Sábado &amp; Domingo</div><div class="home-card-title">Recuperación</div><div class="home-card-desc">Sueño, hidratación y descanso</div></div>
+  </div>
+  <div class="home-group-label">Rastrea &amp; Maneja</div>
+  <div class="home-grid">
+    <div class="home-card" onclick="goHome('progress')"><span class="home-card-icon">📈</span><div class="home-card-title">Tu Progreso</div><div class="home-card-desc">Días completados, check-ins mensuales</div></div>
+    <div class="home-card" onclick="goHome('nutrition')"><span class="home-card-icon">🍽️</span><div class="home-card-title">Tu Nutrición</div><div class="home-card-desc">Prioridades diarias + tus totales de MyFitnessPal</div></div>
+    <div class="home-card" onclick="goHome('rules')"><span class="home-card-icon">📋</span><div class="home-card-title">Reglas &amp; Progresión</div><div class="home-card-desc">Descansos, intensidad, cuándo subir peso</div></div>
+    <div class="home-card" onclick="goHome('notes')"><span class="home-card-icon">📝</span><div class="home-card-title">Notas De Sesión</div><div class="home-card-desc">Tu bitácora de entrenamiento</div></div>
+  </div>
+</div>
+
+<!-- DAY1 -->
+<div id="day1" class="section"><div class="section-header"><div class="section-eyebrow">Día De Fuerza 01 · Lunes</div><div class="section-title">FULL BODY A</div></div><div class="phase-block"><div class="phase-header warmup-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label green">W</div><div><div class="phase-title green">Calentamiento</div><div class="phase-sub green">4–5 min · sube la temperatura, sin prisa</div></div></div><div class="phase-toggle green open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item warm"><div><div class="pill-text">Caminata En Caminadora</div><div class="pill-sets">2 min</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=treadmill+warm+up+walk" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Sentadillas Con Peso Corporal</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=bodyweight+squat+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Bisagra De Cadera</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hip+hinge+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Círculos De Brazos</div><div class="pill-sets">10 en cada dirección</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=arm+circles+warm+up" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header " onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label ">A</div><div><div class="phase-title ">Entrenamiento</div><div class="phase-sub ">Descansa 60–90 seg entre series</div></div></div><div class="phase-toggle  open">+</div></div><div class="phase-body"><div class="ex-section"><div class="exercise"><div class="ex-top"><div class="ex-num">1</div><div class="ex-info"><div class="ex-name">Sentadilla Goblet</div><div class="ex-sets-line"><span class="ex-sets">3 × 8 reps</span></div><div class="ex-note">Pecho arriba y baja con control</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=goblet+squat+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e1histbtn" onclick="toggleHistory('m1e1')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e1histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m1e1s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m1e1s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="lbs" id="m1e1s3"/></div></div></div><div class="history-panel" id="m1e1histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e1note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e1saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e1',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">2</div><div class="ex-info"><div class="ex-name">Sentadilla Dividida Asistida Con Pie Delantero Elevado</div><div class="ex-sets-line"><span class="ex-sets">3 × 8 reps por pierna</span></div><div class="ex-note">Agárrate de algo estable pa' que el balance no sea el problema</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=front+foot+elevated+split+squat+assisted+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e2histbtn" onclick="toggleHistory('m1e2')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e2histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m1e2s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m1e2s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="lbs" id="m1e2s3"/></div></div></div><div class="history-panel" id="m1e2histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e2note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e2saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e2',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">3</div><div class="ex-info"><div class="ex-name">Buenos Días Sentado Con Barra</div><div class="ex-sets-line"><span class="ex-sets">3 × 10 reps</span></div><div class="ex-note">Espalda recta — el movimiento sale de la cadera</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=seated+good+morning+barbell+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e3histbtn" onclick="toggleHistory('m1e3')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e3histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m1e3s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m1e3s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="lbs" id="m1e3s3"/></div></div></div><div class="history-panel" id="m1e3histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e3note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e3saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e3',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">4</div><div class="ex-info"><div class="ex-name">Flexiones Inclinadas</div><div class="ex-sets-line"><span class="ex-sets">3 × 10 reps</span></div><div class="ex-note">Mientras más alta la superficie, más fácil</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=incline+push+up+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e4histbtn" onclick="toggleHistory('m1e4')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e4histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m1e4s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m1e4s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="reps" id="m1e4s3"/></div></div></div><div class="history-panel" id="m1e4histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e4note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e4saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e4',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">5</div><div class="ex-info"><div class="ex-name">Plancha</div><div class="ex-sets-line"><span class="ex-sets">3 × 20–30 seg</span></div><div class="ex-note">Si 30 seg es mucho, quédate en 20 con buena forma</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=plank+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e5histbtn" onclick="toggleHistory('m1e5')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e5histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="seg" id="m1e5s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="seg" id="m1e5s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="seg" id="m1e5s3"/></div></div></div><div class="history-panel" id="m1e5histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e5note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e5saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e5',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">6</div><div class="ex-info"><div class="ex-name">Remo Invertido Con TRX</div><div class="ex-sets-line"><span class="ex-sets">3 × 8 reps</span></div><div class="ex-note">Mientras más parada estés, más fácil</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=TRX+inverted+row+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m1e6histbtn" onclick="toggleHistory('m1e6')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m1e6histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m1e6s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m1e6s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="reps" id="m1e6s3"/></div></div></div><div class="history-panel" id="m1e6histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m1e6note"></textarea><div class="log-save-row"><span class="saved-tag" id="m1e6saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m1e6',this)">GUARDAR</button></div></div></div></div></div><div class="phase-block"><div class="phase-header dark-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label orange">♥</div><div><div class="phase-title light">Cardio Opcional</div><div class="phase-sub light">5 min · solo si te da el tiempo</div></div></div><div class="phase-toggle light open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item " style="border-left:2px solid var(--orange)"><div><div class="pill-text">Caminata Suave En Caminadora</div><div class="pill-sets">5 min, ritmo cómodo</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=treadmill+walk" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">↓</div><div><div class="phase-title blue">Cool Down</div><div class="phase-sub blue">3–5 min</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Cuádriceps</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=standing+quad+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Pecho</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=doorway+chest+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Respiración Lenta</div><div class="pill-sets">1 min</div></div></div></div></div></div></div><button class="complete-day-btn" id="completeBtn1" onclick="markDayComplete(1,this)">Marcar Lunes Completo</button></div>
+
+<!-- DAY2 -->
+<div id="day2" class="section"><div class="section-header"><div class="section-eyebrow">Día 02 · Martes · Suave</div><div class="section-title">CARDIO LIGERO &amp; MOVILIDAD</div></div><div class="phase-block"><div class="phase-header warmup-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label green">W</div><div><div class="phase-title green">Calentamiento</div><div class="phase-sub green">3–5 min</div></div></div><div class="phase-toggle green open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item warm"><div><div class="pill-text">Caminata Suave</div><div class="pill-sets">3–5 min</div></div></div></div></div></div></div><div class="phase-block"><div class="phase-header " onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label ">A</div><div><div class="phase-title ">Actividad</div><div class="phase-sub ">Ritmo cómodo — hoy no es día de matarse</div></div></div><div class="phase-toggle  open">+</div></div><div class="phase-body"><div class="ex-section"><div class="exercise"><div class="ex-top"><div class="ex-num">1</div><div class="ex-info"><div class="ex-name">Arrastre De Trineo Hacia Atrás</div><div class="ex-sets-line"><span class="ex-sets">3–4 min · resistencia ligera</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=reverse+sled+drag+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m2e1histbtn" onclick="toggleHistory('m2e1')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m2e1histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">Peso</span><input class="weight-input" type="number" placeholder="lbs" id="m2e1s1"/></div></div></div><div class="history-panel" id="m2e1histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m2e1note"></textarea><div class="log-save-row"><span class="saved-tag" id="m2e1saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m2e1',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">2</div><div class="ex-info"><div class="ex-name">Rotaciones De Cadera 90/90</div><div class="ex-sets-line"><span class="ex-sets">2 × 6 por lado</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=90+90+hip+rotations+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">3</div><div class="ex-info"><div class="ex-name">Equilibrio En Una Pierna Con Apoyo</div><div class="ex-sets-line"><span class="ex-sets">2 × 20 seg por lado</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=supported+single+leg+balance+exercise" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">4</div><div class="ex-info"><div class="ex-name">Caminata Cómoda</div><div class="ex-sets-line"><span class="ex-sets">10–15 min</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=treadmill+walk" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m2e4histbtn" onclick="toggleHistory('m2e4')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m2e4histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">Min</span><input class="weight-input" type="number" placeholder="min" id="m2e4s1"/></div></div></div><div class="history-panel" id="m2e4histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m2e4note"></textarea><div class="log-save-row"><span class="saved-tag" id="m2e4saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m2e4',this)">GUARDAR</button></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">↓</div><div><div class="phase-title blue">Cool Down</div><div class="phase-sub blue">Estiramientos suaves</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Flexor De Cadera</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hip+flexor+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Pantorrilla</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=calf+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">✦</div><div><div class="phase-title blue">Recuperación — Elige Una</div><div class="phase-sub blue">Hidroterapia o botas de compresión</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Hidroterapia</div><div class="pill-sets">10 min · temperatura cómoda</div></div></div><div class="pill-item cool"><div><div class="pill-text">O Botas De Compresión</div><div class="pill-sets">12 min · nivel cómodo</div></div></div></div></div></div></div><button class="complete-day-btn" id="completeBtn2" onclick="markDayComplete(2,this)">Marcar Martes Completo</button></div>
+
+<!-- DAY3 -->
+<div id="day3" class="section"><div class="section-header"><div class="section-eyebrow">Día De Fuerza 02 · Miércoles</div><div class="section-title">FULL BODY B</div></div><div class="phase-block"><div class="phase-header warmup-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label green">W</div><div><div class="phase-title green">Calentamiento</div><div class="phase-sub green">4–5 min · sube la temperatura, sin prisa</div></div></div><div class="phase-toggle green open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item warm"><div><div class="pill-text">Bici O Caminadora Suave</div><div class="pill-sets">2 min</div></div></div><div class="pill-item warm"><div><div class="pill-text">Sentarte Y Pararte Del Banco</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=sit+to+stand+exercise" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Bisagra De Cadera Sin Peso</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hip+hinge+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Círculos De Hombros</div><div class="pill-sets">10 en cada dirección</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=shoulder+circles+warm+up" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header " onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label ">A</div><div><div class="phase-title ">Entrenamiento</div><div class="phase-sub ">Descansa 60–90 seg entre series</div></div></div><div class="phase-toggle  open">+</div></div><div class="phase-body"><div class="ex-section"><div class="exercise"><div class="ex-top"><div class="ex-num">1</div><div class="ex-info"><div class="ex-name">Sentadilla A Banco</div><div class="ex-sets-line"><span class="ex-sets">2 × 10 reps</span></div><div class="ex-note">Toca el banco suave — no te dejes caer</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=box+squat+to+bench+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e1histbtn" onclick="toggleHistory('m3e1')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e1histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m3e1s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m3e1s2"/></div></div></div><div class="history-panel" id="m3e1histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e1note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e1saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e1',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">2</div><div class="ex-info"><div class="ex-name">Peso Muerto Con Mancuernas</div><div class="ex-sets-line"><span class="ex-sets">3 × 8–10 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=dumbbell+deadlift+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e2histbtn" onclick="toggleHistory('m3e2')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e2histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m3e2s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m3e2s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="lbs" id="m3e2s3"/></div></div></div><div class="history-panel" id="m3e2histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e2note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e2saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e2',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">3</div><div class="ex-info"><div class="ex-name">Press De Pecho Con Mancuernas</div><div class="ex-sets-line"><span class="ex-sets">2 × 10 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=dumbbell+chest+press+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e3histbtn" onclick="toggleHistory('m3e3')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e3histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m3e3s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m3e3s2"/></div></div></div><div class="history-panel" id="m3e3histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e3note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e3saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e3',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">4</div><div class="ex-info"><div class="ex-name">Remo Con Mancuernas</div><div class="ex-sets-line"><span class="ex-sets">3 × 10 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=dumbbell+row+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e4histbtn" onclick="toggleHistory('m3e4')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e4histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m3e4s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m3e4s2"/></div><div class="set-entry"><span class="set-label">S3</span><input class="weight-input" type="number" placeholder="lbs" id="m3e4s3"/></div></div></div><div class="history-panel" id="m3e4histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e4note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e4saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e4',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">5</div><div class="ex-info"><div class="ex-name">Puente De Glúteos</div><div class="ex-sets-line"><span class="ex-sets">2 × 12 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=glute+bridge+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e5histbtn" onclick="toggleHistory('m3e5')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e5histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m3e5s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m3e5s2"/></div></div></div><div class="history-panel" id="m3e5histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e5note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e5saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e5',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">6</div><div class="ex-info"><div class="ex-name">Elevaciones De Pantorrillas</div><div class="ex-sets-line"><span class="ex-sets">2 × 15 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=standing+calf+raise+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m3e6histbtn" onclick="toggleHistory('m3e6')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m3e6histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m3e6s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m3e6s2"/></div></div></div><div class="history-panel" id="m3e6histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m3e6note"></textarea><div class="log-save-row"><span class="saved-tag" id="m3e6saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m3e6',this)">GUARDAR</button></div></div></div></div></div><div class="phase-block"><div class="phase-header dark-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label orange">♥</div><div><div class="phase-title light">Cardio Opcional</div><div class="phase-sub light">5 min · solo si te da el tiempo</div></div></div><div class="phase-toggle light open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item " style="border-left:2px solid var(--orange)"><div><div class="pill-text">Bici Estacionaria Suave</div><div class="pill-sets">5 min, ritmo cómodo</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=stationary+bike" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">↓</div><div><div class="phase-title blue">Cool Down</div><div class="phase-sub blue">3–5 min</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Femorales</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hamstring+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento Suave De Glúteo</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=glute+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Pecho</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=doorway+chest+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><button class="complete-day-btn" id="completeBtn3" onclick="markDayComplete(3,this)">Marcar Miércoles Completo</button></div>
+
+<!-- DAY4 -->
+<div id="day4" class="section"><div class="section-header"><div class="section-eyebrow">Día 04 · Jueves · Suave</div><div class="section-title">CARDIO LIGERO &amp; MOVILIDAD DE PIERNAS</div></div><div class="phase-block"><div class="phase-header warmup-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label green">W</div><div><div class="phase-title green">Calentamiento</div><div class="phase-sub green">3–5 min</div></div></div><div class="phase-toggle green open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item warm"><div><div class="pill-text">Caminata Cómoda</div><div class="pill-sets">3–5 min</div></div></div></div></div></div></div><div class="phase-block"><div class="phase-header " onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label ">A</div><div><div class="phase-title ">Actividad</div><div class="phase-sub ">Ritmo cómodo — deberías poder conversar</div></div></div><div class="phase-toggle  open">+</div></div><div class="phase-body"><div class="ex-section"><div class="exercise"><div class="ex-top"><div class="ex-num">1</div><div class="ex-info"><div class="ex-name">Caminadora Suave O Bici Estacionaria</div><div class="ex-sets-line"><span class="ex-sets">15–20 min</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=stationary+bike" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m4e1histbtn" onclick="toggleHistory('m4e1')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m4e1histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">Min</span><input class="weight-input" type="number" placeholder="min" id="m4e1s1"/></div></div></div><div class="history-panel" id="m4e1histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m4e1note"></textarea><div class="log-save-row"><span class="saved-tag" id="m4e1saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m4e1',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">2</div><div class="ex-info"><div class="ex-name">Elevaciones De Tibial Contra La Pared</div><div class="ex-sets-line"><span class="ex-sets">2 × 12–15 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=wall+tibialis+raise+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m4e2histbtn" onclick="toggleHistory('m4e2')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m4e2histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m4e2s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m4e2s2"/></div></div></div><div class="history-panel" id="m4e2histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m4e2note"></textarea><div class="log-save-row"><span class="saved-tag" id="m4e2saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m4e2',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">3</div><div class="ex-info"><div class="ex-name">Elevaciones De Pantorrilla Con Apoyo</div><div class="ex-sets-line"><span class="ex-sets">2 × 15 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=supported+calf+raise" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m4e3histbtn" onclick="toggleHistory('m4e3')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m4e3histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m4e3s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m4e3s2"/></div></div></div><div class="history-panel" id="m4e3histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m4e3note"></textarea><div class="log-save-row"><span class="saved-tag" id="m4e3saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m4e3',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">4</div><div class="ex-info"><div class="ex-name">Movilidad Suave De Tobillo Y Cadera</div><div class="ex-sets-line"><span class="ex-sets">3–5 min</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=ankle+and+hip+mobility+routine+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">↓</div><div><div class="phase-title blue">Cool Down</div><div class="phase-sub blue">Estiramientos suaves</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Pantorrilla</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=calf+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Couch Stretch Suave</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=couch+stretch+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">✦</div><div><div class="phase-title blue">Recuperación — Elige Una</div><div class="phase-sub blue">Hidroterapia o botas de compresión</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Hidroterapia</div><div class="pill-sets">10 min · temperatura cómoda</div></div></div><div class="pill-item cool"><div><div class="pill-text">O Botas De Compresión</div><div class="pill-sets">12 min · nivel cómodo</div></div></div></div></div></div></div><button class="complete-day-btn" id="completeBtn4" onclick="markDayComplete(4,this)">Marcar Jueves Completo</button></div>
+
+<!-- DAY5 -->
+<div id="day5" class="section"><div class="section-header"><div class="section-eyebrow">Día De Fuerza 03 · Viernes</div><div class="section-title">FULL BODY C</div></div><div class="phase-block"><div class="phase-header warmup-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label green">W</div><div><div class="phase-title green">Calentamiento</div><div class="phase-sub green">4–5 min · sube la temperatura, sin prisa</div></div></div><div class="phase-toggle green open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item warm"><div><div class="pill-text">Caminata En Caminadora</div><div class="pill-sets">2 min</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=treadmill+warm+up+walk" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Sentadillas Con Peso Corporal</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=bodyweight+squat+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Bisagra De Cadera</div><div class="pill-sets">8 reps</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hip+hinge+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item warm"><div><div class="pill-text">Círculos De Brazos</div><div class="pill-sets">10 en cada dirección</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=arm+circles+warm+up" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header " onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label ">A</div><div><div class="phase-title ">Entrenamiento</div><div class="phase-sub ">Descansa 60–90 seg entre series</div></div></div><div class="phase-toggle  open">+</div></div><div class="phase-body"><div class="ex-section"><div class="exercise"><div class="ex-top"><div class="ex-num">1</div><div class="ex-info"><div class="ex-name">Sentadilla Goblet</div><div class="ex-sets-line"><span class="ex-sets">2 × 10 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=goblet+squat+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e1histbtn" onclick="toggleHistory('m5e1')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e1histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="lbs" id="m5e1s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="lbs" id="m5e1s2"/></div></div></div><div class="history-panel" id="m5e1histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e1note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e1saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e1',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">2</div><div class="ex-info"><div class="ex-name">Step-Up Bajo Con Apoyo</div><div class="ex-sets-line"><span class="ex-sets">2 × 8 reps por pierna</span></div><div class="ex-note">Escalón bajito y agárrate de algo estable</div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=low+step+up+with+support" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e2histbtn" onclick="toggleHistory('m5e2')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e2histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m5e2s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m5e2s2"/></div></div></div><div class="history-panel" id="m5e2histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e2note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e2saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e2',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">3</div><div class="ex-info"><div class="ex-name">Flexiones Inclinadas</div><div class="ex-sets-line"><span class="ex-sets">2 × 8–10 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=incline+push+up+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e3histbtn" onclick="toggleHistory('m5e3')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e3histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m5e3s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m5e3s2"/></div></div></div><div class="history-panel" id="m5e3histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e3note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e3saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e3',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">4</div><div class="ex-info"><div class="ex-name">Remo Sentado Con Banda</div><div class="ex-sets-line"><span class="ex-sets">2 × 10–12 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=seated+resistance+band+row" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e4histbtn" onclick="toggleHistory('m5e4')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e4histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m5e4s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m5e4s2"/></div></div></div><div class="history-panel" id="m5e4histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e4note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e4saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e4',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">5</div><div class="ex-info"><div class="ex-name">Puente De Glúteos</div><div class="ex-sets-line"><span class="ex-sets">2 × 12 reps</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=glute+bridge+tutorial" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e5histbtn" onclick="toggleHistory('m5e5')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e5histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="reps" id="m5e5s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="reps" id="m5e5s2"/></div></div></div><div class="history-panel" id="m5e5histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e5note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e5saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e5',this)">GUARDAR</button></div></div><div class="exercise"><div class="ex-top"><div class="ex-num">6</div><div class="ex-info"><div class="ex-name">Plancha</div><div class="ex-sets-line"><span class="ex-sets">2 × 20 seg</span></div></div><div class="ex-actions"><a class="video-btn" href="https://www.youtube.com/results?search_query=plank+tutorial+beginner" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div><div class="weight-log"><button class="weight-log-label-btn" id="m5e6histbtn" onclick="toggleHistory('m5e6')"><span class="hist-caret">▸</span>📝 Log<span class="hist-count" id="m5e6histcount">0</span></button><div class="set-inputs"><div class="set-entry"><span class="set-label">S1</span><input class="weight-input" type="number" placeholder="seg" id="m5e6s1"/></div><div class="set-entry"><span class="set-label">S2</span><input class="weight-input" type="number" placeholder="seg" id="m5e6s2"/></div></div></div><div class="history-panel" id="m5e6histpanel"><div class="history-empty">No hay sesiones anteriores</div></div><textarea class="log-note-field" placeholder="Notas..." id="m5e6note"></textarea><div class="log-save-row"><span class="saved-tag" id="m5e6saved">✓ Guardado</span><button class="save-log-btn" onclick="saveExercise('m5e6',this)">GUARDAR</button></div></div></div></div></div><div class="phase-block"><div class="phase-header dark-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label orange">♥</div><div><div class="phase-title light">Cardio Opcional</div><div class="phase-sub light">5 min · solo si te da el tiempo</div></div></div><div class="phase-toggle light open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item " style="border-left:2px solid var(--orange)"><div><div class="pill-text">Caminata Suave En Caminadora</div><div class="pill-sets">5 min, ritmo cómodo</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=treadmill+walk" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><div class="phase-block"><div class="phase-header cooldown-hdr" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label blue">↓</div><div><div class="phase-title blue">Cool Down</div><div class="phase-sub blue">3–5 min</div></div></div><div class="phase-toggle blue open">+</div></div><div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Cuádriceps</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=standing+quad+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Pecho</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=doorway+chest+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div><div class="pill-item cool"><div><div class="pill-text">Estiramiento De Flexor De Cadera</div><div class="pill-sets">30 seg por lado</div></div><a class="video-btn" href="https://www.youtube.com/results?search_query=hip+flexor+stretch" target="_blank"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>VER</a></div></div></div></div></div><button class="complete-day-btn" id="completeBtn5" onclick="markDayComplete(5,this)">Marcar Viernes Completo</button></div>
+
+<!-- RECOVERY -->
+<div id="recovery" class="section">
+  <div class="section-header"><div class="section-eyebrow">Fuera Del Gym También Cuenta</div><div class="section-title">RECUPERACIÓN</div></div>
+  <div class="alert-banner"><div class="alert-banner-label">🟢 Tu Cuerpo Se Fortalece Descansando</div><ul class="alert-banner-list"><li>El entrenamiento es el estímulo — el progreso de verdad pasa cuando descansas, duermes y te hidratas bien.</li></ul></div>
+  <div class="info-grid">
+    <div class="info-card"><div class="info-card-label">😴 Sueño</div><ul class="info-card-list"><li>Apunta a 7–9 horas cada noche.</li><li>Dormir bien es lo que más te va a subir la energía.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">💧 Hidratación</div><ul class="info-card-list"><li>Toma agua durante todo el día, y especialmente antes y después de entrenar.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">🧘🏻‍♀️ Estiramientos</div><ul class="info-card-list"><li>Aguanta cada estiramiento 20–30 seg.</li><li>Sin rebotar — suave y respirando.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">🌀 Foam Roller (Opcional)</div><ul class="info-card-list"><li>Presión suave, 30–60 seg por grupo muscular.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">💆🏻‍♀️ Masaje (Opcional)</div><ul class="info-card-list"><li>Presión cómoda, y con un profesional cualificado si decides hacerlo.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">🛁 Hidroterapia</div><ul class="info-card-list"><li>Siempre a una temperatura cómoda.</li><li>Hidrátate después.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">🦵 Botas De Compresión (Opcional)</div><ul class="info-card-list"><li>Sigue las instrucciones del equipo y usa un nivel cómodo.</li><li>Si tienes alguna condición médica, pregúntame antes de usarlas.</li></ul></div>
+    <div class="info-card"><div class="info-card-label">🔥 Sauna (Opcional)</div><ul class="info-card-list"><li>No es obligatorio.</li><li>Evítalo si estás deshidratada, mareada, enferma, o si tu médico te lo ha desaconsejado.</li></ul></div>
+  </div>
+  <div class="phase-block">
+    <div class="phase-header" onclick="togglePhase(this)"><div class="phase-header-left"><div class="phase-label">S</div><div><div class="phase-title">Sábado &amp; Domingo</div><div class="phase-sub">Descanso — muévete suave si te provoca</div></div></div><div class="phase-toggle open">+</div></div>
+    <div class="phase-body"><div class="pill-section"><div class="pill-grid"><div class="pill-item "><div><div class="pill-text">Día de descanso</div><div class="pill-sets">Una caminata ligera está bien, sin presión</div></div></div></div></div></div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="progress" class="section">
+  <div class="section-header"><div class="section-eyebrow">Consistencia Es El Juego Completo</div><div class="section-title">TU PROGRESO</div></div>
+  <div class="streak-card">
+    <div class="streak-num" id="streakNum">0</div>
+    <div class="streak-lbl">Días Completados</div>
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+  <div class="food-log-card">
+    <div class="food-log-header">
+      <div><div class="food-log-title">📏 Check-In Mensual</div><div class="food-log-sub">Cómo te sientes, medidas &amp; notas — una vez al mes</div></div>
+      <div><input type="date" class="food-log-date" id="checkinDate"></div>
+    </div>
+    <div class="food-log-body">
+      <div class="checkin-grid">
+        <div><label>Peso (lbs) — opcional</label><input type="number" step="0.1" id="ciWeight" placeholder="lbs"></div>
+        <div><label>Cintura (in) — opcional</label><input type="number" step="0.1" id="ciWaist" placeholder="in"></div>
+      </div>
+      <div class="checkin-subhead">Cómo Te Sientes Este Mes</div>
+      <div class="checkin-grid checkin-grid-3">
+        <div><label>Nivel De Energía</label><select id="ciEnergy"><option value="">—</option><option>Excelente</option><option>Buena</option><option>Regular</option><option>Baja</option></select></div>
+        <div><label>Calidad De Sueño</label><select id="ciSleepQuality"><option value="">—</option><option>Excelente</option><option>Buena</option><option>Pobre</option></select></div>
+        <div><label>Movilidad / Equilibrio</label><select id="ciMobility"><option value="">—</option><option>Mejor</option><option>Igual</option><option>Peor</option></select></div>
+      </div>
+      <div class="checkin-subhead">Notas</div>
+      <textarea class="log-note-field" id="ciStrength" placeholder="Notas de fuerza... ej. subí el peso en la sentadilla goblet" style="margin-bottom:0.5rem;min-height:50px;"></textarea>
+      <textarea class="log-note-field" id="ciGeneral" placeholder="Energía / sueño / cómo te sientes en general" style="min-height:50px;"></textarea>
+      <div class="log-save-row" style="margin-top:0.5rem;"><span class="saved-tag" id="ciSaved">✓ Guardado</span><button class="save-log-btn" onclick="saveCheckin()">GUARDAR CHECK-IN</button></div>
+    </div>
+  </div>
+  <div class="section-eyebrow" style="margin-bottom:0.75rem;">Historial De Check-Ins</div>
+  <div id="checkinHistory"></div>
+  <div class="section-eyebrow" style="margin:1.5rem 0 0.75rem;">Historial De Días Completados</div>
+  <div id="historyList"></div>
+</div>
+
+<!-- NUTRITION -->
+<div id="nutrition" class="section">
+  <div class="section-header"><div class="section-eyebrow">Comida Que Te Da Energía</div><div class="section-title">TU NUTRICIÓN</div></div>
+  <div class="alert-banner"><div class="alert-banner-label">🍽️ No Es Dieta — Es Combustible</div><ul class="alert-banner-list"><li>Lo que comes es lo que te da la energía pa' entrenar y pa' tu día. No hay que eliminar comidas ni pasar hambre.</li><li>Si un día se sale del plan, el próximo día seguimos igual — sin culpa.</li></ul></div>
+  <div class="info-grid">
+    <div class="info-card"><div class="info-card-label">🥩 Prioridades Diarias</div><ul class="info-card-list"><li>Proteína en cada comida</li><li>Frutas y vegetales todos los días</li><li>Fibra</li><li>Carbohidratos suficientes pa' entrenar con energía</li><li>Agua durante todo el día</li></ul></div>
+    <div class="info-card"><div class="info-card-label">📊 Cómo Sabemos Que Está Funcionando</div><ul class="info-card-list"><li>Tienes más energía durante el día</li><li>Subes de peso en tus ejercicios</li><li>Te recuperas bien entre sesiones</li><li>Duermes mejor</li></ul></div>
+  </div>
+  <div class="food-log-card">
+    <div class="food-log-header">
+      <div><div class="food-log-title">📓 Registra En MyFitnessPal</div><div class="food-log-sub">MyFitnessPal no deja que apps como esta jalen tu diario automáticamente — registra allá como siempre</div></div>
+    </div>
+    <div class="food-log-body">
+      <a class="mfp-btn" href="#" onclick="openMFP();return false;">Abrir MyFitnessPal</a>
+      <div class="mfp-note">Registra tu día en MyFitnessPal, y luego mete los totales de hoy aquí abajo pa' que yo también los pueda ver.</div>
+    </div>
+  </div>
+  <div class="food-log-card">
+    <div class="food-log-header">
+      <div><div class="food-log-title">📝 Totales De Hoy</div><div class="food-log-sub">Mete lo que MyFitnessPal te muestra del día</div></div>
+      <div><input type="date" class="food-log-date" id="macroDate"></div>
+    </div>
+    <div class="food-log-body">
+      <div class="macro-input-grid">
+        <div><label>Calorías</label><input type="number" id="inCal" placeholder="0"></div>
+        <div><label>Proteína (g)</label><input type="number" id="inProtein" placeholder="0"></div>
+        <div><label>Carbs (g)</label><input type="number" id="inCarb" placeholder="0"></div>
+        <div><label>Grasa (g)</label><input type="number" id="inFat" placeholder="0"></div>
+        <div><label>Fibra (g)</label><input type="number" id="inFiber" placeholder="0"></div>
+        <div><label>Agua (oz)</label><input type="number" id="inWater" placeholder="0"></div>
+      </div>
+      <div class="log-save-row" style="justify-content:flex-start;margin-bottom:1rem;"><button class="save-log-btn" onclick="saveMacros()" style="padding:8px 18px;">GUARDAR TOTALES</button><span class="saved-tag" id="macroSaved">✓ Guardado</span></div>
+      <div class="macro-totals-row">
+        <div class="macro-total-card"><div class="macro-total-val cal" id="barCalVal">0</div><div class="macro-total-label">Calorías</div></div>
+        <div class="macro-total-card"><div class="macro-total-val protein" id="barProteinVal">0g</div><div class="macro-total-label">Proteína</div></div>
+        <div class="macro-total-card"><div class="macro-total-val carbs" id="barFiberVal">0g</div><div class="macro-total-label">Fibra</div><div class="macro-total-goal">meta: 25–35g</div><div class="macro-bar-track"><div class="macro-bar-fill carbs" id="barFiber" style="width:0%"></div></div></div>
+        <div class="macro-total-card"><div class="macro-total-val water" id="barWaterVal">0oz</div><div class="macro-total-label">Agua</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-eyebrow" style="margin-bottom:0.75rem;">Historial</div>
+  <div id="macroHistory"></div>
+</div>
+
+<!-- RULES -->
+<div id="rules" class="section">
+  <div class="section-header"><div class="section-eyebrow">Léelo Antes De Empezar</div><div class="section-title">REGLAS &amp; PROGRESIÓN</div></div>
+  <div class="rule-card"><div class="rule-num">01</div><div><div class="rule-title">Descansa 60–90 Seg Entre Series</div><div class="rule-body">Toma el descanso que necesites dentro de ese rango. Si necesitas un poquito más, está bien — mejor descansada y con buena técnica.</div></div></div>
+  <div class="rule-card"><div class="rule-num">02</div><div><div class="rule-title">Superseries</div><div class="rule-body">Cuando te toque una superserie: haces dos ejercicios diferentes uno detrás del otro, y después descansas 60–90 seg.</div></div></div>
+  <div class="rule-card"><div class="rule-num">03</div><div><div class="rule-title">Deja 2–4 Reps En El Tanque</div><div class="rule-body">Termina la mayoría de las series sintiendo que todavía podrías hacer 2–4 repeticiones más con buena forma. No hace falta llegar al fallo pa' progresar.</div></div></div>
+  <div class="rule-card"><div class="rule-num">04</div><div><div class="rule-title">Sube El Peso Poco A Poco</div><div class="rule-body">Cuando la técnica se sienta consistente y las reps salgan cómodas, subimos el peso un poquito. Apunta tus pesos en el log pa' que veamos el progreso.</div></div></div>
+  <div class="rule-card"><div class="rule-num">05</div><div><div class="rule-title">Técnica Antes Que El Reloj</div><div class="rule-body">La meta es ~30 minutos en los días de fuerza, pero la técnica y el descanso van primero. Si no terminas todo, no pasa nada.</div></div></div>
+  <div class="rule-card"><div class="rule-num">06</div><div><div class="rule-title">Cuándo Parar</div><div class="rule-body">Para enseguida si sientes dolor agudo, molestia en el pecho, mareo o falta de aire fuera de lo normal — y me avisas.</div></div></div>
+  <hr class="divider"/>
+  <div class="timeline-block">
+    <div class="timeline-header"><div><div class="timeline-header-title">Estructura Semanal</div><div class="timeline-header-period">Fuerza · Energía · Movilidad</div></div></div>
+    <div class="timeline-body"><ul class="timeline-list">
+      <li>3 días de fuerza full body (lunes, miércoles, viernes) — ~30 min</li>
+      <li>2 días de cardio ligero y movilidad (martes y jueves) con recuperación</li>
+      <li>Calentamiento y cool down en cada sesión</li>
+      <li>Cardio suave de 5 min al final de los días de fuerza, si te da el tiempo</li>
+      <li>Fin de semana pa' descansar</li>
+    </ul></div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div id="notes" class="section">
+  <div class="section-header"><div class="section-eyebrow">Tu Bitácora Personal</div><div class="section-title">NOTAS DE SESIÓN</div></div>
+  <div class="notes-area">
+    <div class="notes-area-header"><div class="notes-area-title">Notas Existentes</div><div class="notes-area-sub">Registradas de sesiones anteriores</div></div>
+    <div class="notes-body" id="existingNotesBody"></div>
+  </div>
+  <div class="notes-area">
+    <div class="notes-area-header"><div class="notes-area-title">Añadir Una Nota De Sesión</div><div class="notes-area-sub">Cómo te sentiste, pesos usados, cualquier cosa pa' recordar</div></div>
+    <div class="notes-body">
+      <textarea class="session-note-input" id="newNote" placeholder="ej. Lunes — la plancha de 30 seg me salió completa hoy..."></textarea>
+      <button class="save-note-btn" onclick="saveNote()">GUARDAR NOTA</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+<script>
+const SHEET_API_URL='https://script.google.com/macros/s/AKfycby1suXfAeriv-1pr9MYUgAB-wYaC33b4unCUnBOytFlQvV9ErndH3T5Jt_JtvRSv7hAWg/exec';
+const CLIENT_PREFIX='maria_';
+let STORAGE_BROKEN=false;
+let ALL_VALUES_CACHE=null;
+
+function setSyncBadge(state,text){const dot=document.getElementById('syncDot');const lbl=document.getElementById('syncText');if(!dot||!lbl)return;dot.className='sync-dot '+state;lbl.textContent=text;}
+function showStorageWarning(){if(STORAGE_BROKEN)return;STORAGE_BROKEN=true;const b=document.createElement('div');b.id='storageWarn';b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#7f1d1d;color:#fff;font-size:0.75rem;font-weight:700;text-align:center;padding:10px;z-index:9999;font-family:Inter,sans-serif;';b.textContent='⚠ No se está guardando. Revisa tu conexión a internet.';document.body.appendChild(b);}
+function clearStorageWarning(){STORAGE_BROKEN=false;const e=document.getElementById('storageWarn');if(e)e.remove();}
+
+async function loadAllValuesCache(){setSyncBadge('syncing','Sincronizando…');try{const r=await fetch(SHEET_API_URL+'?action=getall');const d=await r.json();ALL_VALUES_CACHE=(d&&d.values)?d.values:{};clearStorageWarning();setSyncBadge('synced','Sincronizado');}catch(e){ALL_VALUES_CACHE={};showStorageWarning();setSyncBadge('offline','Sin conexión');}}
+
+async function storageGet(key){const fk=CLIENT_PREFIX+key;if(ALL_VALUES_CACHE&&Object.prototype.hasOwnProperty.call(ALL_VALUES_CACHE,fk))return ALL_VALUES_CACHE[fk];try{const r=await fetch(SHEET_API_URL+'?action=get&key='+encodeURIComponent(fk));const d=await r.json();return d&&d.value!==undefined?d.value:null;}catch(e){return null;}}
+async function storageSet(key,value){const fk=CLIENT_PREFIX+key;try{const r=await fetch(SHEET_API_URL+'?action=set&key='+encodeURIComponent(fk)+'&value='+encodeURIComponent(value));const d=await r.json();if(d&&d.success){if(ALL_VALUES_CACHE)ALL_VALUES_CACHE[fk]=value;clearStorageWarning();return true;}showStorageWarning();return false;}catch(e){showStorageWarning();return false;}}
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+function switchTab(id,el){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function goHome(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');const mt=Array.from(document.querySelectorAll('.tab')).find(t=>(t.getAttribute('onclick')||'').includes("'"+id+"'"));if(mt)mt.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function togglePhase(h){const b=h.nextElementSibling;const t=h.querySelector('.phase-toggle');if(b.classList.contains('collapsed')){b.classList.remove('collapsed');t.classList.add('open');}else{b.classList.add('collapsed');t.classList.remove('open');}}
+
+async function saveExercise(exKey,btn){const inputs=document.querySelectorAll('[id^="'+exKey+'s"],[id^="'+exKey+'note"]');const currentSets={};const snapshot=[];let noteText='';inputs.forEach(inp=>{if(inp.id===exKey+'note'){noteText=inp.value.trim();currentSets[inp.id]=inp.value;}else if(/^.+s\d+$/.test(inp.id)){currentSets[inp.id]=inp.value;if(inp.value!==''){const sl=inp.parentElement?inp.parentElement.querySelector('.set-label'):null;snapshot.push({label:sl?sl.textContent:'',value:inp.value});}}});
+const raw=await storageGet('exercise:'+exKey);const existing=raw?JSON.parse(raw):{history:[]};const history=existing.history||[];
+if(snapshot.length>0||noteText){const now=new Date();const ds=now.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'});const ts=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});history.unshift({date:ds,time:ts,sets:snapshot,note:noteText});}
+const record={sets:currentSets,history:history};const saved=await storageSet('exercise:'+exKey,JSON.stringify(record));
+updateHistoryCount(exKey,history.length);const panel=document.getElementById(exKey+'histpanel');if(panel&&panel.classList.contains('open'))renderHistoryFromRecord(exKey,record);
+const tag=document.getElementById(exKey+'saved');const orig='GUARDAR';if(saved){btn.classList.add('saved');btn.textContent='✓ GUARDADO';if(tag)tag.classList.add('show');}else{btn.textContent='⚠ REINTENTAR';}
+setTimeout(()=>{btn.classList.remove('saved');btn.textContent=orig;if(tag)tag.classList.remove('show');},1800);}
+
+async function loadAllWeights(){const exKeys=new Set();document.querySelectorAll('.weight-log-label-btn').forEach(btn=>exKeys.add(btn.id.replace('histbtn','')));for(const exKey of exKeys){const raw=await storageGet('exercise:'+exKey);if(!raw)continue;const record=JSON.parse(raw);if(record.sets)Object.keys(record.sets).forEach(id=>{const el=document.getElementById(id);if(el)el.value=record.sets[id];});updateHistoryCount(exKey,(record.history||[]).length);}}
+
+async function toggleHistory(exKey){const panel=document.getElementById(exKey+'histpanel');const btn=document.getElementById(exKey+'histbtn');if(!panel)return;const isOpen=panel.classList.toggle('open');if(btn)btn.classList.toggle('open',isOpen);if(isOpen){panel.innerHTML='<div class="history-empty">Cargando...</div>';const raw=await storageGet('exercise:'+exKey);const record=raw?JSON.parse(raw):{history:[]};renderHistoryFromRecord(exKey,record);}}
+
+function renderHistoryFromRecord(exKey,record){const panel=document.getElementById(exKey+'histpanel');if(!panel)return;const history=record.history||[];if(history.length===0){panel.innerHTML='<div class="history-empty">No hay sesiones anteriores registradas</div>';return;}panel.innerHTML=history.map(h=>{const st=h.sets.length?h.sets.map(s=>(s.label?s.label+': ':'')+s.value).join(' · '):'';const nh=h.note?'<div class="history-note">"'+escapeHtml(h.note)+'"</div>':'';return'<div class="history-row"><span class="history-date">'+h.date+' · '+h.time+'</span><div class="history-row-content">'+(st?'<span class="history-sets">'+escapeHtml(st)+'</span>':'')+nh+'</div></div>';}).join('');}
+
+function updateHistoryCount(exKey,count){const ce=document.getElementById(exKey+'histcount');const be=document.getElementById(exKey+'histbtn');if(ce)ce.textContent=count;if(be)be.classList.toggle('has-history',count>0);}
+
+const SESSION_NOTES_KEY='session_notes';
+async function loadSessionNotes(){const raw=await storageGet(SESSION_NOTES_KEY);const c=document.getElementById('existingNotesBody');const notes=raw?JSON.parse(raw):[];if(notes.length===0){c.innerHTML='<div class="empty-msg">Aún no hay notas registradas</div>';return;}c.innerHTML=notes.map(n=>'<div class="note-entry"><div class="note-date">'+n.date+'</div>'+escapeHtml(n.text)+'</div>').join('');}
+async function saveNote(){const inp=document.getElementById('newNote');const text=inp.value.trim();if(!text)return;const now=new Date();const ds=now.toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'2-digit'})+' · '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});const raw=await storageGet(SESSION_NOTES_KEY);const notes=raw?JSON.parse(raw):[];notes.unshift({date:ds,text:text});await storageSet(SESSION_NOTES_KEY,JSON.stringify(notes));inp.value='';loadSessionNotes();}
+
+const COMPLETIONS_KEY='completions';
+const DAY_NAMES={1:'Lunes — Full Body A',2:'Martes — Cardio & Movilidad',3:'Miércoles — Full Body B',4:'Jueves — Cardio & Tobillos',5:'Viernes — Full Body C'};
+const DAY_BTN_LABELS={1:'Lunes',2:'Martes',3:'Miércoles',4:'Jueves',5:'Viernes'};
+function localISO(d){const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,10);}
+function todayISO(){return localISO(new Date());}
+async function getCompletions(){const raw=await storageGet(COMPLETIONS_KEY);return raw?JSON.parse(raw):{};}
+async function markDayComplete(dayId,btn){const completions=await getCompletions();const key=todayISO();const list=completions[key]||[];const idx=list.indexOf(dayId);if(idx>=0)list.splice(idx,1);else list.push(dayId);completions[key]=list;await storageSet(COMPLETIONS_KEY,JSON.stringify(completions));updateCompleteButtons(completions);renderProgress(completions);}
+function updateCompleteButtons(completions){const todayList=completions[todayISO()]||[];[1,2,3,4,5].forEach(id=>{const btn=document.getElementById('completeBtn'+id);if(!btn)return;if(todayList.includes(id)){btn.classList.add('done');btn.textContent='✓ '+DAY_BTN_LABELS[id]+' Completo';}else{btn.classList.remove('done');btn.textContent='Marcar '+DAY_BTN_LABELS[id]+' Completo';}});}
+function renderProgress(completions){let total=0;const entries=[];Object.keys(completions).sort().reverse().forEach(date=>{const list=completions[date]||[];total+=list.length;list.forEach(d=>entries.push({date,name:DAY_NAMES[d]||('Día '+d)}));});
+const sn=document.getElementById('streakNum');if(sn)sn.textContent=total;
+const wg=document.getElementById('weekGrid');if(wg){const labels=['D','L','M','X','J','V','S'];const now=new Date();let html='';for(let i=6;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);const key=localISO(d);const done=(completions[key]||[]).length>0;html+='<div class="week-day"><div class="dot '+(done?'done':'')+'">'+(done?'✓':d.getDate())+'</div><div class="wlbl">'+labels[d.getDay()]+'</div></div>';}wg.innerHTML=html;}
+const hw=document.getElementById('historyList');if(hw){if(entries.length===0){hw.innerHTML='<div class="empty-msg">Aún no hay días marcados — toca "Marcar Completo" al final de cada sesión</div>';}else{hw.innerHTML=entries.slice(0,25).map(h=>'<div class="history-item"><div class="hd-name">'+escapeHtml(h.name)+'</div><div class="hd-date">'+h.date+'</div></div>').join('');}}}
+async function initProgress(){const completions=await getCompletions();updateCompleteButtons(completions);renderProgress(completions);await initCheckins();}
+
+const CHECKINS_KEY='checkins';
+const CI_FIELDS=['ciWeight','ciWaist','ciEnergy','ciSleepQuality','ciMobility','ciStrength','ciGeneral'];
+async function getCheckins(){const raw=await storageGet(CHECKINS_KEY);const list=raw?JSON.parse(raw):[];return list.sort((a,b)=>a.date<b.date?1:-1);}
+async function saveCheckin(){const date=document.getElementById('checkinDate').value||todayISO();const v=id=>document.getElementById(id).value.trim();const entry={date,weight:v('ciWeight'),waist:v('ciWaist'),energy:v('ciEnergy'),sleepQuality:v('ciSleepQuality'),mobility:v('ciMobility'),strength:v('ciStrength'),general:v('ciGeneral')};
+let list=await getCheckins();list=list.filter(e=>e.date!==date);list.push(entry);await storageSet(CHECKINS_KEY,JSON.stringify(list));
+const tag=document.getElementById('ciSaved');if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),1800);}
+CI_FIELDS.forEach(id=>document.getElementById(id).value='');
+renderCheckinHistory(await getCheckins());}
+
+function fmtDelta(curr,prev){if(!curr||!prev)return'';const c=parseFloat(curr),p=parseFloat(prev);if(isNaN(c)||isNaN(p))return'';const diff=+(c-p).toFixed(1);if(diff===0)return'<span class="checkin-delta">sin cambio</span>';const sign=diff>0?'+':'';return'<span class="checkin-delta">'+sign+diff+' vs anterior</span>';}
+function renderCheckinHistory(list){const wrap=document.getElementById('checkinHistory');if(!wrap)return;if(!list||list.length===0){wrap.innerHTML='<div class="empty-msg">Aún no hay check-ins — guarda tu primer check-in arriba</div>';return;}wrap.innerHTML=list.map((entry,idx)=>{const prev=list[idx+1];const notes=[];if(entry.strength)notes.push('<b style="color:var(--white)">Fuerza:</b> '+escapeHtml(entry.strength));if(entry.general)notes.push('<b style="color:var(--white)">General:</b> '+escapeHtml(entry.general));const habits=[];if(entry.energy)habits.push('⚡ Energía: '+entry.energy);if(entry.sleepQuality)habits.push('😴 Sueño: '+entry.sleepQuality);if(entry.mobility)habits.push('🧘🏻‍♀️ Movilidad: '+entry.mobility);
+const stats=(entry.weight?'<div class="checkin-stat"><div class="checkin-stat-val">'+escapeHtml(entry.weight)+'</div><div class="checkin-stat-label">lbs</div>'+(prev?fmtDelta(entry.weight,prev.weight):'')+'</div>':'')+(entry.waist?'<div class="checkin-stat"><div class="checkin-stat-val">'+escapeHtml(entry.waist)+'"</div><div class="checkin-stat-label">Cintura</div>'+(prev?fmtDelta(entry.waist,prev.waist):'')+'</div>':'');
+return'<div class="checkin-card"><div class="checkin-card-top"><div class="checkin-card-date">'+entry.date+'</div></div>'+(stats?'<div class="checkin-stats-row">'+stats+'</div>':'')+(habits.length?'<div class="checkin-habits">'+habits.map(h=>'<span class="checkin-habit-badge">'+escapeHtml(h)+'</span>').join('')+'</div>':'')+(notes.length?'<div>'+notes.map(n=>'<div style="margin-bottom:4px;font-size:0.72rem;color:var(--grey);">'+n+'</div>').join('')+'</div>':'')+'</div>';}).join('');}
+async function initCheckins(){const di=document.getElementById('checkinDate');if(di)di.value=todayISO();renderCheckinHistory(await getCheckins());}
+
+function openMFP(){const fallback=setTimeout(()=>{window.open('https://www.myfitnesspal.com/food/diary','_blank');},700);window.location.href='myfitnesspal://';window.addEventListener('blur',()=>clearTimeout(fallback),{once:true});}
+const MACRO_KEY_PREFIX='macro:';
+function macroDateVal(){const di=document.getElementById('macroDate');return di&&di.value?di.value:todayISO();}
+async function getMacroDatesList(){const raw=await storageGet('macroDates');return raw?JSON.parse(raw):[];}
+async function saveMacros(){const ds=macroDateVal();const n=id=>parseFloat(document.getElementById(id).value)||0;const entry={date:ds,cal:n('inCal'),protein:n('inProtein'),carbs:n('inCarb'),fat:n('inFat'),fiber:n('inFiber'),water:n('inWater')};
+await storageSet(MACRO_KEY_PREFIX+ds,JSON.stringify(entry));
+let dates=await getMacroDatesList();if(!dates.includes(ds)){dates.push(ds);await storageSet('macroDates',JSON.stringify(dates));}
+const tag=document.getElementById('macroSaved');if(tag){tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),1800);}
+renderMacroBars(entry);renderMacroHistory();}
+function renderMacroBars(e){document.getElementById('barCalVal').textContent=Math.round(e.cal||0);document.getElementById('barProteinVal').textContent=Math.round(e.protein||0)+'g';document.getElementById('barFiberVal').textContent=Math.round(e.fiber||0)+'g';document.getElementById('barWaterVal').textContent=Math.round(e.water||0)+'oz';document.getElementById('barFiber').style.width=Math.min(((e.fiber||0)/35)*100,100)+'%';}
+async function loadMacrosForDate(){const ds=macroDateVal();const raw=await storageGet(MACRO_KEY_PREFIX+ds);const e=raw?JSON.parse(raw):{};const set=(id,v)=>{document.getElementById(id).value=v||'';};set('inCal',e.cal);set('inProtein',e.protein);set('inCarb',e.carbs);set('inFat',e.fat);set('inFiber',e.fiber);set('inWater',e.water);renderMacroBars(e);}
+async function renderMacroHistory(){const dates=(await getMacroDatesList()).sort().reverse().slice(0,14);const wrap=document.getElementById('macroHistory');if(!dates.length){wrap.innerHTML='<div class="empty-msg">Aún no hay totales registrados</div>';return;}const rows=await Promise.all(dates.map(async d=>{const raw=await storageGet(MACRO_KEY_PREFIX+d);const e=raw?JSON.parse(raw):{};return'<div class="history-item"><div class="hd-name">'+d+'</div><div class="hd-date">'+Math.round(e.cal||0)+' kcal · P'+Math.round(e.protein||0)+' C'+Math.round(e.carbs||0)+' G'+Math.round(e.fat||0)+' · Fibra '+Math.round(e.fiber||0)+'g · Agua '+Math.round(e.water||0)+'oz</div></div>';}));wrap.innerHTML=rows.join('');}
+async function initNutrition(){const di=document.getElementById('macroDate');if(di){di.value=todayISO();di.addEventListener('change',loadMacrosForDate);}await loadMacrosForDate();await renderMacroHistory();}
+
+async function testConnection(){const s=document.getElementById('connStatus');s.style.color='#888';s.textContent='Probando...';try{const r=await fetch(SHEET_API_URL+'?action=set&key='+CLIENT_PREFIX+'connection_test&value='+Date.now());const d=await r.json();if(d&&d.success){s.style.color='#22c55e';s.textContent='✓ Conectado — guardando funciona';}else{s.style.color='#ef4444';s.textContent='✗ Error de conexión';}}catch(e){s.style.color='#ef4444';s.textContent='✗ Sin conexión — '+e.message;}}
+
+document.addEventListener('DOMContentLoaded',()=>{(async()=>{await loadAllValuesCache();await Promise.all([loadAllWeights(),loadSessionNotes(),initProgress(),initNutrition()]);})();});
+
+</script>
+</body>
+</html>
